@@ -92,7 +92,7 @@ export default function Dashboard() {
           <div className="bg-white p-5 rounded-lg shadow">
             <h2 className="text-xl font-bold mb-4">Riwayat Pendapatan Saya</h2>
 
-            <BarChart data={statistics}>
+            <BarChart  width={900} height={350} data={statistics}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
