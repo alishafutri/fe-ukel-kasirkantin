@@ -187,49 +187,49 @@ export default function Menu() {
   }
   return (
     <>
-      <div className="flex justify-between mb-8">
-        <h2 className="text-2xl font-bold text-slate-800">Kelola Menu</h2>
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-2xl font-bold text-gray-800">Kelola Menu</h2>
         <div className=" flex gap-3">
-            <input type="text" placeholder="Cari Menu ..." value={search} onChange={(e) => setSearch(e.target.value)} className="border border-slate-200 rounded-xl px-3 py-2.5 w-72 bg-white focus:ring-2 focus:ring-green-500 focus:border-transprent shadow-sm"/>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="border border-slate-200 rounded-xl px-4 py-2.5 bg-white shadow-sm">
+            <input type="text" placeholder="Cari Menu ..." value={search} onChange={(e) => setSearch(e.target.value)} className="border px-3 py-2 w-72 rounded"/>
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="border px-3 py-2 rounded">
                 <option value="">Urutkan</option>
                 <option value="name">Name</option>
                 <option value="category">Category</option>
                 <option value="price">Price</option>
                 <option value="stock">Stock</option>
             </select>
-            <select value={order} onChange={(e) => setOrder(e.target.value)} className="border border-slate-200 rounded-xl px-4 py-2.5 bg-white shadow-sm">
+            <select value={order} onChange={(e) => setOrder(e.target.value)} className="border px-3 py-2 rounded">
                 <option value="asc">A-Z</option>
                 <option value="desc">Z-A</option>
             </select>
-            <button onClick={() => setOpenModal(true)} className="bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg transition-all">+ Tambah Menu</button>
+            <button onClick={() => setOpenModal(true)} className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded">+ Tambah Menu</button>
         </div>
       </div>
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden text-center">
+      <div className="bg-white border border-gray-200 overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Image</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Menu Names</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Categori</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Price</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Stock</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Actions</th>
+              <th className="border-r border-gray-200  px-4 py-3 bg-gray-100">Image</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Menu Names</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Categori</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Price</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Stock</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {menus.map((menu) => (
-              <tr key={menu.id} className="border-b border-gray-200">
-                <td className="px-6 py-4 text-sm text-slate-600">
+              <tr key={menu.id} className="border-b border-gray-200 text-center">
+                <td className="border-r border-gray-200 px-6 py-4 text-sm text-gray-600">
                   <img src={menu.image} alt={menu.name} className="w-14 h-14 object-cover mx-auto" />
                 </td>
-                <td className="px-6 py-4 text-sm text-slate-600">{menu.name}</td>
-                <td className="px-6 py-4 text-sm text-slate-600">
+                <td className="border border-gray-200 px-6 py-4 text-sm text-gray-600">{menu.name}</td>
+                <td className="border-r border-gray-200 px-6 py-4 text-sm text-gray-600">
                   <span className={`px-2 py-1 rounded-md text-xs font-medium ${menu.category === "food" ? "bg-orange-100 text-orange-600" : "bg-blue-100 text-blue-600"}`}> {menu.category}</span>
                 </td>
-                <td className="px-6 py-4 text-sm text-slate-600">Rp {menu.price.toLocaleString("id-ID")}</td>
-                <td className="px-6 py-4 text-sm text-slate-600">{menu.stock}</td>
+                <td className="border-r border-gray-200 px-6 py-4 text-sm text-gray-600">Rp {menu.price.toLocaleString("id-ID")}</td>
+                <td className="border-r border-gray-200 px-6 py-4 text-sm text-gray-600">{menu.stock}</td>
                 <td className="p-3">
                   <div className="flex justify-center gap-2">
                     <button onClick={() => handleEdit(menu)} className="bg-yellow-400 hover:bg-yellow-300 text-white px-3 py-1 rounded">Edit</button>
@@ -240,7 +240,7 @@ export default function Menu() {
             ))}
           </tbody>
         </table>
-        <div className="flex justify-between items-center px-4 py-3 border-t border-gray-200">
+        <div className="flex justify-between items-center p-3 border-t">
             <div className="flex items-center gap-3">
                 <span className="text-gray-600 text-sm">
                     Items per page
@@ -279,10 +279,10 @@ export default function Menu() {
       </div>
       {openModal && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
-            <div className="bg-white w-full max-w-md rounded-xl p-6">
+            <div className="bg-white w-120 p-5 rounded border border-gray-200">
                 <h2 className="text-xl font-bold mb-4">{isEdit ? "Edit Menu" : "Tambah Menu"}</h2>
                 <form onSubmit={isEdit ? updateMenu : createMenu} className="space-y-4">
-                    <input type="text" placeholder="Nama" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="w-full border rounded-lg p-2" required />
+                    <input type="text" placeholder="Nama" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="w-full border p-2 rounded" required />
                     <select value={form.category} onChange={(e) => setForm({...form, category:e.target.value})} className="w-full border rounded-lg p-2">
                         <option value="">Pilih Kategori</option>
                         <option value="food">Food</option>

@@ -133,7 +133,7 @@ export default function History() {
                   <td className="px-6 py-4 text-sm text-slate-600">Rp {item.total.toLocaleString("id-ID")}</td>
                   <td className="px-6 py-4 text-sm text-slate-600">{new Date(item.date).toLocaleDateString("id-ID")}</td>
                   <td className="px-6 py-4 text-sm text-slate-600 flex justify-center gap-2">
-                    <button onClick={() => navigate(`/history/${item.id}`)} className="bg-green-500 text-white px-3 py-1 rounded-lg">
+                    <button onClick={() => navigate(`/history/${item.id}`)} className="bg-green-600 hover:bg-green-500 font-semibold text-white px-3 py-1 rounded-lg">
                       Detail
                     </button>
                     <button onClick={() => deleteTransaction(item.id)} className="bg-red-600 hover:bg-red-500 font-semibold text-white px-3 py-1 rounded-lg">

@@ -13,14 +13,16 @@ export default function Transaksi() {
   const [limit, setLimit] = useState(10);
   const [rangeData, setRangeData] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [transactionData, setTransactionData] = useState(null);
 
   const [paymentMethod, setPaymentMethod] = useState("");
   const [amountPaid, setAmountPaid] = useState("");
   const filteredMenus = menus.filter((menu) => {
     const matchSearch = menu.name.toLowerCase().includes(search.toLowerCase());
     const matchCategory = selectedCategory === "all" || menu.category.toLowerCase() === selectedCategory;
-  return matchSearch && matchCategory;
-})
+    return matchSearch && matchCategory;
+  });
 
   useEffect(() => {
     getMenus();
@@ -29,7 +31,7 @@ export default function Transaksi() {
   async function getMenus() {
     try {
       const response = await apiFetch(`/menu?page=${currentPage}&limit=${limit}`);
-      const result = await response.json(); 
+      const result = await response.json();
       console.log(result);
 
       setMenus(result.data.data);
@@ -91,9 +93,9 @@ export default function Transaksi() {
       return;
     }
 
-    if (!paymentMethod){
-        alert("Pilih metode pembayaran terlebih dahulu!");
-        return;
+    if (!paymentMethod) {
+      alert("Pilih metode pembayaran terlebih dahulu!");
+      return;
     }
     try {
       const payload = {
@@ -121,6 +123,8 @@ export default function Transaksi() {
 
       alert("Transaksi berhasil");
 
+      setTransactionData(result.data);
+      setShowReceipt(true);
       setCart([]);
       setAmountPaid("");
       setPaymentMethod("");
@@ -132,26 +136,26 @@ export default function Transaksi() {
 
   return (
     <>
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Transaksi</h1>
-        <div className="flex gap-2 mb-6">
-        <input type="text" value={search} placeholder="Cari menu..." onChange={(e) => setSearch(e.target.value)} className="border border-gray-300 px-4 py-2 rounded-xl w-72 bg-white" />
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Transaksi</h1>
+          <div className="flex gap-2 mb-6">
+            <input type="text" value={search} placeholder="Cari menu..." onChange={(e) => setSearch(e.target.value)} className="border border-gray-300 px-4 py-2 rounded-xl w-72 bg-white" />
             <button onClick={() => setSelectedCategory("all")} className={`px-4 py-2 rounded-full ${selectedCategory == "all" ? "bg-green-600 text-white" : "bg-white border"}`}>
-                All
+              All
             </button>
             <button onClick={() => setSelectedCategory("food")} className={`px-4 py-2 rounded-full ${selectedCategory == "food" ? "bg-green-600 text-white" : "bg-white border"}`}>
-                Food
+              Food
             </button>
             <button onClick={() => setSelectedCategory("drink")} className={`px-4 py-2 rounded-full ${selectedCategory == "drink" ? "bg-green-600 text-white" : "bg-white border"}`}>
-                Drink
+              Drink
             </button>
+          </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-8 grid grid-cols-3 gap-4">
-          {filteredMenus.map((menu) => (
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-8 grid grid-cols-3 gap-4">
+            {filteredMenus.map((menu) => (
               <div key={menu.id} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden">
                 <img src={menu.image} alt={menu.name} className="w-full h-40 object-cover" />
                 <div className="p-4">
@@ -165,78 +169,96 @@ export default function Transaksi() {
                 </div>
               </div>
             ))}
-        </div>
-        <div className="col-span-4">
-          <div className="bg-white rounded-2xl shadow-sm p-5 h-full top-5">
-            <h2 className="text-xl font-bold mb-4">Cart</h2>
+          </div>
+          <div className="col-span-4">
+            <div className="bg-white rounded-2xl shadow-sm p-5 h-full top-5">
+              <h2 className="text-xl font-bold mb-4">Cart</h2>
 
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {cart.length === 0 && <p className="text-center text-gray-500">Cart Masih kosong</p>}
-              {cart.map((item) => (
-                <div key={item.id} className="border rounded-xl p-3">
-                  <div className="flex justify-between">
-                    <div>
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-gray-500">Rp {item.price.toLocaleString("id-ID")}</p>
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {cart.length === 0 && <p className="text-center text-gray-500">Cart Masih kosong</p>}
+                {cart.map((item) => (
+                  <div key={item.id} className="border rounded-xl p-3">
+                    <div className="flex justify-between">
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-gray-500">Rp {item.price.toLocaleString("id-ID")}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => decreaseQty(item.id)} className="w-7 h-7 bg-red-500 text-white rounded">
+                          {" "}
+                          -{" "}
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button onClick={() => increaseQty(item.id)} className="w-7 h-7 bg-green-500 text-white rounded">
+                          {" "}
+                          +{" "}
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => decreaseQty(item.id)} className="w-7 h-7 bg-red-500 text-white rounded">
-                        {" "}
-                        -{" "}
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => increaseQty(item.id)} className="w-7 h-7 bg-green-500 text-white rounded">
-                        {" "}
-                        +{" "}
-                      </button>
-                    </div>
+                    <div className="mt-2 text-right font-semibold">Rp {(item.price * item.quantity).toLocaleString("id-ID")}</div>
                   </div>
-                  <div className="mt-2 text-right font-semibold">Rp {(item.price * item.quantity).toLocaleString("id-ID")}</div>
+                ))}
+              </div>
+
+              <hr className="my-4" />
+
+              <div className="flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span>Rp {total.toLocaleString("id-ID")}</span>
+              </div>
+
+              <div className="mt-4">
+                <label htmlFor className="text-sm font-medium">
+                  Metode Pembayaran
+                </label>
+                <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full border rounded-xl p-2 mt-1">
+                  <option value="">Pilih Metode</option>
+                  <option value="cash">Cash</option>
+                  <option value="qris">QRIS</option>
+                </select>
+              </div>
+
+              {paymentMethod === "cash" && (
+                <>
+                  <input type="number" placeholder="Jumlah Bayar" value={amountPaid} onChange={(e) => setAmountPaid(e.target.value)} className="w-full border rounded-xl p-2 mt-4" />
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-500">Kembalian</p>
+                    <p className="font-bold text-green-600">Rp {change > 0 ? change.toLocaleString("id-ID") : 0}</p>
+                  </div>
+                </>
+              )}
+
+              {paymentMethod == "qris" && (
+                <div className="mt-4 text-center">
+                  <img src="/barcode.png" alt="QRIS" className="mx-auto rounded-xl" />
+                  <p className="text-sm text-gray-500 mt-2">Scan QR untuk pembayaran</p>
                 </div>
-              ))}
+              )}
+              <button onClick={createTransaction} className="w-full bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl mt-5 font-semibold">
+                Bayar Sekarang
+              </button>
             </div>
-
-            <hr className="my-4" />
-
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total</span>
-              <span>Rp {total.toLocaleString("id-ID")}</span>
-            </div>
-
-            <div className="mt-4">
-              <label htmlFor className="text-sm font-medium">
-                Metode Pembayaran
-              </label>
-              <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full border rounded-xl p-2 mt-1">
-                <option value="">Pilih Metode</option>
-                <option value="cash">Cash</option>
-                <option value="qris">QRIS</option>
-              </select>
-            </div>
-
-            {paymentMethod === "cash" && (
-              <>
-                <input type="number" placeholder="Jumlah Bayar" value={amountPaid} onChange={(e) => setAmountPaid(e.target.value)} className="w-full border rounded-xl p-2 mt-4" />
-                <div className="mt-3">
-                  <p className="text-sm text-gray-500">Kembalian</p>
-                  <p className="font-bold text-green-600">Rp {change > 0 ? change.toLocaleString("id-ID") : 0}</p>
+            {showReceipt && (
+              <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+                <div className="bg-white p-6 rounded-xl w-96">
+                  <h2 className="font-bold text-xl mb-4">Struk Transaksi</h2>
+                  <div className="border-t border-dashed border-gray-400 my-4"></div>
+                  <p>ID: {transactionData.id}</p>
+                  <p>Metode: {transactionData.payment_method}</p>
+                  <p>Total: Rp {transactionData.total.toLocaleString("id-ID")}</p>
+                  <p>Bayar: Rp {transactionData.amount_paid.toLocaleString("id-ID")}</p>
+                  <p>Kembalian: Rp {transactionData.change_amount.toLocaleString("id-ID")}</p>
+                  <div className="border-t border-dashed border-gray-400 my-4"></div>
+                  <p className="text-center text-gray-500 text-sm">Terima Kasih Sudah Berbelanja</p>
+                  <button onClick={() => setShowReceipt(false)} className="mt-4 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg">
+                    Tutup
+                  </button>
                 </div>
-              </>
-            )}
-
-            {paymentMethod == "qris" && (
-              <div className="mt-4 text-center">
-                <img src="/barcode.png" alt="QRIS" className="mx-auto rounded-xl" />
-                <p className="text-sm text-gray-500 mt-2">Scan QR untuk pembayaran</p>
               </div>
             )}
-            <button onClick={createTransaction} className="w-full bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl mt-5 font-semibold">
-              Bayar Sekarang
-            </button>
           </div>
         </div>
       </div>
-    </div>
       <div className="flex justify-between items-center mt-6 bg-white p-4 rounded-2xl shadow-sm">
         <div className="flex items-center gap-3">
           <span className="text-xm text-gray-500">Items per page</span>
@@ -275,8 +297,8 @@ export default function Transaksi() {
               <IoPlaySkipForwardSharp />
             </button>
           </span>
-        </div> 
+        </div>
       </div>
-      </>
+    </>
   );
 }

@@ -3,76 +3,82 @@ import { useParams } from "react-router-dom";
 import { apiFetch } from "../services/api";
 
 export default function HistoryDetail() {
-    const { id } = useParams();
-    const [transaction, setTransaction] = useState(null);
+  const { id } = useParams();
+  const [transaction, setTransaction] = useState(null);
 
-    useEffect(() => {
-        getDetail();
-    }, []);
+  useEffect(() => {
+    getDetail();
+  }, []);
 
-    async function getDetail() {
-        try {
-            const response = await apiFetch(`/transaksi/${id}`);
-            const result = await response.json();
+  async function getDetail() {
+    try {
+      const response = await apiFetch(`/transaksi/${id}`);
+      const result = await response.json();
 
-            // console.log(result.data)
-            setTransaction(result.data);
-        } catch (error) {
-            console.log(error);
-        }
+      setTransaction(result.data);
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    if (!transaction) {
-        return <p>Loading...</p>;
-    }
+  if (!transaction) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
 
-    return (
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h1 className="text-3xl font-bold mb-6">
-                Detail Transaksi
-            </h1>
-            <div className="mb-6 space-y-2">
-                <p>
-                    <strong>ID:</strong> {transaction.id}
-                </p>
-                <p>
-                    <strong>Cashier:</strong> {transaction.User?.name}
-                </p>
-                <p>
-                    <strong>Payment Method:</strong> {" "} {transaction.payment_method}
-                </p>
-                <p>
-                    <strong>Total:</strong>Rp {" "} {transaction.total.toLocaleString("id-ID")}
-                </p>
-                <p>
-                    <strong>Bayar:</strong> Rp {" "} {transaction.amount_paid.toLocaleString("id-ID")}
-                </p>
-                <p>
-                    <strong>Kembalian:</strong> Rp {" "} {transaction.change_amount.toLocaleString("id-ID")}
-                </p>
-            </div>
-
-            <table className="w-full">
-                <thead>
-                    <tr className="border-b">
-                        <th className="text-left p-3">Menu</th>
-                        <th className="text-left p-3">Quantity</th>
-                        <th className="text-left p-3">Harga</th>
-                        <th className="text-left p-3">Subtotal</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {transaction.DetailTransaksis?.map((item) => (
-                        <tr key={item.id} className="border-b">
-                            <td className="p-3">{item.Menu?.name}</td>
-                            <td className="p-3">{item.quantity}</td>
-                            <td className="p-3">Rp {item.Menu?.price.toLocaleString("id-ID")}</td>
-                            <td className="p-3">Rp {item.subtotal.toLocaleString("id-ID")}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+  return (
+    <div className="flex justify-center">
+      <div className="bg-white w-full max-w-md rounded-lg shadow-lg p-6">
+        <h1 className="text-center text-2xl font-bold">Kasir Kantin</h1>
+        <p className="text-center text-gray-500 text-sm mb-4">Detail Transaksi</p>
+        <div className="border-t border-dashed border-gray-400 my-4"></div>
+        <div className="space-y-1 text-sm">
+          <p>
+            <strong>ID:</strong> {transaction.id}
+          </p>
+          <p>
+            <strong>Kasir:</strong> {transaction.User?.name}
+          </p>
+          <p>
+            <strong>Tanggal:</strong> {new Date(transaction.date).toLocaleString("id-ID")}
+          </p>
+          <p>
+            <strong>Pembayaran:</strong> {transaction.payment_method}
+          </p>
         </div>
-    );
+        <div className="border-t border-dashed border-gray-400 my-4"></div>
+        <div className="space-y-3">
+          {transaction.DetailTransaksis?.map((item) => (
+            <div key={item.id}>
+              <div className="flex justify-between font-medium">
+                <span>{item.Menu?.name}</span>
+                <span>Rp {item.subtotal.toLocaleString("id-ID")}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-500">
+                <span>
+                  {item.quantity} x Rp {item.Menu.price.toLocaleString("id-ID")}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="border-t border-dashed border-gray-400 my-4"></div>
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span>Total</span>
+            <span>Rp {transaction.total.toLocaleString("id-ID")}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Bayar</span>
+            <span>Rp {transaction.amount_paid.toLocaleString("id-ID")}</span>
+          </div>
+          <div className="flex justify-between font-bold text-green-600">
+            <span>Kembalian</span>
+            <span>Rp {transaction.change_amount.toLocaleString("id-ID")}</span>
+          </div>
+        </div>
+        <div className="border-t border-dashed border-gray-400 my-4"></div>
+        <p className="text-center text-gray-500 text-sm">Terima Kasih Sudah Berbelanja</p>
+      </div>
+    </div>
+  );
 }

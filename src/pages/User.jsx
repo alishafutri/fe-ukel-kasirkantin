@@ -172,33 +172,33 @@ export default function User() {
   }
   return (
     <>
-      <div className="flex justify-between mb-8">
+      <div className="flex justify-between items-center mb-5">
         <h1 className="text-2xl font-bold text-slate-800">Kelola User</h1>
         <div className="flex gap-3">
-        <input type="text" placeholder="Cari user..." value={search} onChange={(e) => setSearch(e.target.value)} className="border border-slate-200 rounded-xl px-3 py-2.5 w-72 bg-white focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm " />
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="border border-slate-200 rounded-xl px-4 py-2.5 bg-white shadow-sm">
+        <input type="text" placeholder="Cari user..." value={search} onChange={(e) => setSearch(e.target.value)} className="border px-3 py-2 w-72 rounded" />
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="border px-3 py-2 rounded">
             <option value="">Urutkan</option>
             <option value="name">Nama</option>
             <option value="username">Username</option>
             <option value="role">Role</option>
         </select>
-        <select value={order} onChange={(e) => setOrder(e.target.value)} className="border border-slate-200 rounded-xl px-4 py-2.5 bg-white shadow-sm">
+        <select value={order} onChange={(e) => setOrder(e.target.value)} className="border px-3 py-2 rounded">
             <option value="asc">A-Z</option>
             <option value="desc">Z-A</option>
         </select>
-        <button onClick={() => setOpenModal(true)} className="bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 rounded-xl transition-all">
+        <button onClick={() => setOpenModal(true)} className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded" >
           + Tambah User
         </button>
         </div>
       </div>
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white border border-gray-200 overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Nama</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Username</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Role</th>
-              <th className="px-6 py-6 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50">Actions</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Nama</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Username</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Role</th>
+              <th className="border-r border-gray-200 px-4 py-3 bg-gray-100">Actions</th>
             </tr>
           </thead>
 
@@ -229,7 +229,7 @@ export default function User() {
       </div>
       {openModal && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
-          <div className="bg-white w-full max-w-md rounded-xl p-6">
+          <div className="bg-white w-120 p-5 rounded border border-gray-200">
             <h2 className="text-xl font-bold mb-4">{isEdit ? "Edit User" : "Tambah User"}</h2>
 
             <form onSubmit={isEdit ? updateUser : createUser} className="space-y-4">
